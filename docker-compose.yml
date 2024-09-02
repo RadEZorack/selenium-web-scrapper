@@ -3,15 +3,32 @@ version: '3.8'
 services:
   selenium:
     image: selenium/standalone-chrome:latest
+    platform: linux/amd64   # Ensures compatibility with ARM architecture through Docker's platform emulation. Consider removing this line if you are not on a M1 Mac.
     ports:
       - "4444:4444"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:4444/wd/hub || exit 1"]
+      interval: 5s
+      retries: 5
 
   app:
     build: .
     depends_on:
-      - selenium
+      selenium:
+        condition: service_healthy
     volumes:
       - ./app:/app
     environment:
       - SELENIUM_REMOTE_URL=http://selenium:4444/wd/hub
     command: python /app/main.py
+
+  test:
+    build: .
+    depends_on:
+      selenium:
+        condition: service_healthy
+    volumes:
+      - ./app:/app
+    environment:
+      - SELENIUM_REMOTE_URL=http://selenium:4444/wd/hub
+    command: pytest /app/tests/test_selenium.py
