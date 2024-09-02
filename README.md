@@ -26,12 +26,12 @@ Docker Compose
 Installation
 Clone the repository:
 
-git clone https://github.com/your-username/selenium-docker-automation.git
-cd selenium-docker-automation
+git clone https://github.com/RadEZorack/selenium-web-scrapper.git
+cd selenium-web-scrapper
 Build and run the Docker containers:
-
 docker-compose up --build
 The script will execute automatically, and the results will be saved to app/output/results.csv.
+(You may need to run each container separately to let the selenium driver properly start)
 
 Running Tests
 To run the tests, use:
